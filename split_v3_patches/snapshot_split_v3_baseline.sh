@@ -30,6 +30,40 @@ done
 
 echo "[$(date -u +%FT%TZ)] summary detected; taking snapshot" | tee -a "$LOG"
 
+# 0. Post-hoc drop-tracking injection.
+# If this eval ran the pre-patch code, split_v3_baseline_summary.json won't
+# have n_expected/n_encoded/n_missing. Inject them from n_queries in the
+# baseline metrics + the known manifest row count (45954) so the frozen
+# artifact carries the same schema as future patched-code runs.
+python3 - <<'PYINJ' | tee -a "$LOG"
+import json, sys
+from pathlib import Path
+summary_p = Path("/home/ray/default/paradigm_v2/results/split_v3_baseline/split_v3_baseline_summary.json")
+metrics_p = Path("/home/ray/default/paradigm_v2/results/split_v3_baseline/baseline_metrics.json")
+if not summary_p.exists():
+    print("no summary — skipping injection"); sys.exit(0)
+s = json.loads(summary_p.read_text())
+if s.get("n_expected") is not None and s.get("n_encoded") is not None:
+    print(f"summary already carries drop-tracking (n_encoded={s['n_encoded']}, n_missing={s.get('n_missing')}); no injection needed")
+    sys.exit(0)
+# split_v3 testset_unique = 45954 rows by construction (from split_v3_config.json).
+n_expected = 45954
+n_encoded = None
+if metrics_p.exists():
+    m = json.loads(metrics_p.read_text())
+    n_encoded = m.get("n_encoded") or m.get("n_queries")
+if n_encoded is None:
+    print("could not determine n_encoded — leaving summary unchanged"); sys.exit(0)
+n_missing = n_expected - int(n_encoded)
+s["n_expected"] = n_expected
+s["n_encoded"] = int(n_encoded)
+s["n_missing"] = int(n_missing)
+s["missing_frac"] = float(n_missing / n_expected) if n_expected else 0.0
+s["_drop_tracking_source"] = "post_hoc_injected_by_snapshot_watcher"
+summary_p.write_text(json.dumps(s, indent=2))
+print(f"injected drop-tracking: n_expected={n_expected} n_encoded={n_encoded} n_missing={n_missing}")
+PYINJ
+
 # 1. Hard-link the image cache.
 if [ -d "$CACHE_DST" ]; then
     echo "[$(date -u +%FT%TZ)] WARN: $CACHE_DST already exists; refusing to overwrite" | tee -a "$LOG"
