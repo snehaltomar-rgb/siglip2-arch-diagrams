@@ -1,0 +1,66 @@
+{
+  "split": "v3",
+  "seed": 42,
+  "test_frac": 0.15,
+  "policy": "shuffle full pre-carve pool with seed, first 85% -> train_pre, last 15% -> test, drop from train_pre any row whose PID is in test (enforces train/test PID disjointness), testset_unique = test dedup by product_id (first occurrence). Dropped-from-test duplicates are NOT reassigned to train.",
+  "pool": {
+    "rows": 358220,
+    "unique_pids": 183165
+  },
+  "train": {
+    "rows": 225185,
+    "unique_pids": 137211,
+    "sprouts_rows": 31056,
+    "sprouts_pids": 19734,
+    "sprouts_row_frac": 0.13791327131025602
+  },
+  "test": {
+    "rows": 53733,
+    "unique_pids": 45954,
+    "sprouts_rows": 6999,
+    "sprouts_pids": 6172,
+    "sprouts_row_frac": 0.13025515046619396
+  },
+  "testset_unique": {
+    "rows": 45954,
+    "unique_pids": 45954,
+    "sprouts_rows": 6172,
+    "sprouts_pids": 6172,
+    "sprouts_row_frac": 0.134308221264743,
+    "dropped_duplicate_rows": 7779
+  },
+  "rows_dropped_from_train_for_disjointness": 79302,
+  "pid_overlap_train_testset_unique": 0,
+  "source": {
+    "pre_carve_train": {
+      "path": "/Users/snehaltomar/carrot/algorithms/general-ml/visual_product_search/reports/training_manifest/pre_carve_backup/train.parquet",
+      "sha256": "858677fffdb61a3353579832bd40eda63824abb7623fbbf8001bf004ad7edf2d"
+    },
+    "pre_carve_test": {
+      "path": "/Users/snehaltomar/carrot/algorithms/general-ml/visual_product_search/reports/training_manifest/pre_carve_backup/test.parquet",
+      "sha256": "7d3094f34a070f0ec32032472234aebf3ebc5e3435f4639aee3243c6a434a00c"
+    }
+  },
+  "manifests": {
+    "train": "/Users/snehaltomar/carrot/algorithms/general-ml/visual_product_search/reports/training_manifest/split_v3/train.parquet",
+    "test": "/Users/snehaltomar/carrot/algorithms/general-ml/visual_product_search/reports/training_manifest/split_v3/test.parquet",
+    "testset_unique": "/Users/snehaltomar/carrot/algorithms/general-ml/visual_product_search/reports/training_manifest/split_v3/testset_unique.parquet"
+  },
+  "workspace_env_frozen_2026_08_06": {
+    "note": "pip freeze snapshot from Anyscale workspace expwrk_wug4p4zwg5n9ppqpcdvs8zddr5 at 2026-08-06 (during split_v3 baseline eval). Cross-run R@1 deltas are only apples-to-apples when the FT-side run pins the same versions. Full freeze: /home/ray/default/logs/pip_freeze_split_v3_baseline.txt on the workspace.",
+    "torch": "2.13.0",
+    "torchvision": "0.28.0",
+    "transformers": "5.14.1",
+    "huggingface_hub": "1.26.0",
+    "safetensors": "0.8.0",
+    "numpy": "2.4.6",
+    "pandas": "2.3.3",
+    "pyarrow": "19.0.1",
+    "pillow": "12.3.0",
+    "rembg": "2.0.77",
+    "onnxruntime": "1.28.0",
+    "scipy": "1.18.0",
+    "scikit-learn": "1.5.2",
+    "scikit-image": "0.26.0"
+  }
+}
