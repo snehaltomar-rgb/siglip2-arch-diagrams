@@ -2,35 +2,35 @@
   "split": "v3",
   "seed": 42,
   "test_frac": 0.15,
-  "policy": "shuffle full pre-carve pool with seed, first test_frac rows -> test, rest -> train, testset_unique = test dedup by product_id (first occurrence). Dropped-from-test duplicates are NOT reassigned to train.",
+  "policy": "shuffle full pre-carve pool with seed, first 85% -> train_pre, last 15% -> test, drop from train_pre any row whose PID is in test (enforces train/test PID disjointness), testset_unique = test dedup by product_id (first occurrence). Dropped-from-test duplicates are NOT reassigned to train.",
   "pool": {
     "rows": 358220,
     "unique_pids": 183165
   },
   "train": {
-    "rows": 304487,
-    "unique_pids": 166955,
-    "sprouts_rows": 39978,
-    "sprouts_pids": 23525,
-    "sprouts_row_frac": 0.13129624581673438
+    "rows": 225185,
+    "unique_pids": 137211,
+    "sprouts_rows": 31056,
+    "sprouts_pids": 19734,
+    "sprouts_row_frac": 0.13791327131025602
   },
   "test": {
     "rows": 53733,
-    "unique_pids": 46020,
-    "sprouts_rows": 7072,
-    "sprouts_pids": 6213,
-    "sprouts_row_frac": 0.13161371968808738
+    "unique_pids": 45954,
+    "sprouts_rows": 6999,
+    "sprouts_pids": 6172,
+    "sprouts_row_frac": 0.13025515046619396
   },
   "testset_unique": {
-    "rows": 46020,
-    "unique_pids": 46020,
-    "sprouts_rows": 6213,
-    "sprouts_pids": 6213,
-    "sprouts_row_frac": 0.13500651890482399,
-    "dropped_duplicate_rows": 7713
+    "rows": 45954,
+    "unique_pids": 45954,
+    "sprouts_rows": 6172,
+    "sprouts_pids": 6172,
+    "sprouts_row_frac": 0.134308221264743,
+    "dropped_duplicate_rows": 7779
   },
-  "pid_overlap_train_testset_unique": 29810,
-  "pid_overlap_frac_of_testset_unique": 0.6477618426770969,
+  "rows_dropped_from_train_for_disjointness": 79302,
+  "pid_overlap_train_testset_unique": 0,
   "source": {
     "pre_carve_train": {
       "path": "/Users/snehaltomar/carrot/algorithms/general-ml/visual_product_search/reports/training_manifest/pre_carve_backup/train.parquet",
